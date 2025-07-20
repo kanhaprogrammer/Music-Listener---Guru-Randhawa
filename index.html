@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guru Randhawa - Official Music Hub</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Base Styles */
+        :root {
+            --primary: #ff4d4d;
+            --dark: #1a1a1a;
+            --light: #f5f5f5;
+            --gray: #777;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--light);
+            color: var(--dark);
+            transition: background 0.3s ease;
+        }
+
+        body.dark-mode {
+            background-color: var(--dark);
+            color: var(--light);
+        }
+
+        /* Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 5%;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            position: fixed;
+            width: 90%;
+            z-index: 100;
+        }
+
+        .logo h1 {
+            margin: 0;
+            font-size: 1.8rem;
+            color: var(--primary);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+        nav ul li {
+            margin: 0 1rem;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        #theme-toggle {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                        url('Guru Randhawana.webp') no-repeat center/cover;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            padding: 0 2rem;
+        }
+
+        .hero-content h2 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero-content p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+        }
+
+        .btn {
+            background: var(--primary);
+            color: white;
+            padding: 0.8rem 2rem;
+            border: none;
+            border-radius: 50px;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            transition: transform 0.3s;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+        }
+
+        /* Songs Section */
+        .songs {
+            padding: 5rem 5%;
+        }
+
+        .songs h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .search-bar {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+
+        .search-bar input {
+            width: 60%;
+            padding: 0.8rem 1rem;
+            border: 2px solid var(--gray);
+            border-radius: 50px;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        .year-filter {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .filter-btn {
+            padding: 0.5rem 1.5rem;
+            border: none;
+            border-radius: 50px;
+            background: var(--gray);
+            color: white;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .filter-btn.active {
+            background: var(--primary);
+        }
+
+        .song-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .song-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+
+        .song-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .song-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            background: #eee;
+        }
+
+        .song-info {
+            padding: 1rem;
+        }
+
+        .song-info h3 {
+            margin: 0;
+            font-size: 1.2rem;
+        }
+
+        .song-info p {
+            margin: 0.5rem 0 0;
+            color: var(--gray);
+        }
+
+        .play-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            margin-top: 1rem;
+        }
+
+        /* Audio Player */
+        .audio-player {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: var(--dark);
+            color: white;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .player-controls {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .player-controls button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        /* Year Headers */
+        .year-header {
+            grid-column: 1 / -1;
+            font-size: 1.8rem;
+            margin: 2rem 0 1rem;
+            color: var(--primary);
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 0.5rem;
+        }
+
+        /* Year Badges */
+        .year-badge {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 0.2rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin: 0.5rem 0;
+        }
+
+        /* Audio player current song */
+        #current-song {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 70vw;
+        }
+
+        /* Active song highlight */
+        .song-card.playing {
+            box-shadow: 0 0 0 3px var(--primary);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .song-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header with Navbar -->
+    <header>
+        <div class="logo">
+            <h1>GURU RANDHAWA</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#home">Home</a></li>
+                <li><a href="#songs">Songs</a></li>
+            </ul>
+        </nav>
+        <button id="theme-toggle">🌙</button>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <h2>Welcome to the Ultimate Guru Randhawa Songs Player</h2>
+            <h3>By Kanha Sharma</h3>
+            <p>Stream all his hits in one place!</p>
+            <a href="#songs" class="btn">Explore Songs</a>
+        </div>
+    </section>
+
+    <!-- Songs Gallery (Organized by Year) -->
+    <section class="songs" id="songs">
+        <h2>Discography</h2>
+        <div class="search-bar">
+            <input type="text" id="search-input" placeholder="Search songs...">
+        </div>
+        <div class="year-filter">
+            <button class="filter-btn active" data-year="all">All</button>
+            <button class="filter-btn" data-year="2025">2025</button>
+            <button class="filter-btn" data-year="2023">2023-2022</button>
+            <button class="filter-btn" data-year="2020">2020-2019</button>
+            <button class="filter-btn" data-year="2018">2018-2017</button>
+            <button class="filter-btn" data-year="2016">2016-2015</button>
+        </div>
+        <div class="song-grid" id="song-container">
+            <!-- Songs will be loaded here via JS -->
+        </div>
+    </section>
+
+    <!-- Audio Player (Fixed at Bottom) -->
+    <div class="audio-player" id="player">
+        <div class="player-controls">
+            <button id="prev-btn"><i class="fas fa-step-backward"></i></button>
+            <button id="play-btn"><i class="fas fa-play"></i></button>
+            <button id="next-btn"><i class="fas fa-step-forward"></i></button>
+        </div>
+        <div class="song-info">
+            <span id="current-song">No song selected</span>
+        </div>
+        <audio id="audio-element"></audio>
+    </div>
+
+    <script>
+        // Enhanced Song Data with proper year grouping
+        const songs = [
+            // 2025
+            { title: "Qatal", year: "2025", cover: "Guru Randhawa - QATAL - (Official Video) - Guru Randhawa.jpg", audio: "Guru Randhawa - QATAL - (Official Video) - Guru Randhawa.mp3" },
+            { title: "The Po Po Song", year: "2025", cover: "The Po Po Song.jpg", audio: "The Po Po Song.m4a" },
+            { title: "Sirra", year: "2025", cover: "Sirra.jpg", audio: "Sirra.m4a" },
+            { title: "Karizma", year: "2025", cover: "Karizma.jpg", audio: "Karizma.m4a" },
+            { title: "Tu Kaun Mai Kaun", year: "2025", cover: "Tu Kaun Mai Kon.jpg", audio: "Tu Kaun Mai Kaun.m4a" },
+            { title: "Vibe", year: "2025", cover: "Vibe.jpg", audio: "Vibe.m4a" },
+            { title: "Flex", year: "2025", cover: "Flex.jpg", audio: "Flex.m4a" },
+            
+            // 2023
+            { title: "You Talking to Me", year: "2023", cover: "You Talking to Me.jpg", audio: "You Talking to Me.m4a" },
+            
+            // 2022
+            { title: "Mai Chala", year: "2022", cover: "Main Chala.jpg", audio: "Mai Chala.m4a" },
+            { title: "Designer", year: "2022", cover: "Designer.png", audio: "Designer.m4a" },
+            
+            // 2020
+            { title: "Baby Girl", year: "2020", cover: "Baby Girl.jpg", audio: "Baby Girl.m4a" },
+            { title: "Naach Meri Rani", year: "2020", cover: "Naach Meri Rani.jpg", audio: "Naach Meri Rani.m4a" },
+            { title: "Surma Surma", year: "2020", cover: "Surma Surma.jpg", audio: "Surma Surma.m4a" },
+            
+            // 2019
+            { title: "Slowly Slowly", year: "2019", cover: "Slowly SLowly.jpg", audio: "Slowly Slowly.m4a" },
+            { title: "Ishq Tera", year: "2019", cover: "Ishq Tera.jpg", audio: "Ishq Tera.m4a" },
+            
+            // 2018
+            { title: "Daaru Wargi", year: "2018", cover: "Daaru Wargi.jpg", audio: "Daaru Wargi.m4a" },
+            { title: "Morni Banke", year: "2018", cover: "Moni Banke.jpg", audio: "Morni Banke.m4a" },
+            { title: "Nachle Na", year: "2018", cover: "Nachle na.jpg", audio: "Nachle Na.m4a" },
+            { title: "Kaun Nach Di", year: "2018", cover: "Kaun Nach Di.jpg", audio: "Kaun Nach Di.m4a" },
+            { title: "Made In India", year: "2018", cover: "Made In India.jpg", audio: "Made In India.m4a" },
+            { title: "Ishare Tere", year: "2018", cover: "Ishare Tere.jpg", audio: "Ishare Tere.m4a" },
+            { title: "Raat Kamaal Hai", year: "2018", cover: "Raat Kamaal Hai.jpg", audio: "Raat Kamaal Hai.m4a" },
+            { title: "Downtown", year: "2018", cover: "Downtown.jpg", audio: "Downtown.m4a" },
+            { title: "Tere Te", year: "2018", cover: "Tere Te.jpg", audio: "Tere Te.m4a" },
+            
+            // 2017
+            { title: "Ban Ja Rani", year: "2017", cover: "Ban Ja Rani.jpg", audio: "Ban Ja Rani.m4a" },
+            { title: "Lahore", year: "2017", cover: "Lahore.jpg", audio: "Lahore.m4a" },
+            { title: "Taare", year: "2017", cover: "Taare.jpg", audio: "Taare.m4a" },
+            { title: "High Rated Gabru", year: "2017", cover: "High Rated Gabru.jpg", audio: "High Rated Gabru.m4a" },
+            
+            // 2016
+            { title: "Suit Suit", year: "2016", cover: "Suit Suit.jpg", audio: "Suit Suit.m4a" },
+            { title: "Fashion", year: "2016", cover: "Fashion.jpg", audio: "Fashion.m4a" },
+            
+            // 2015
+            { title: "Outfit", year: "2015", cover: "Outfit.jpg", audio: "Outfit.m4a" },
+            { title: "Patola", year: "2015", cover: "Patola.jpg", audio: "Patola.m4a" }
+        ];
+
+        // DOM Elements
+        const songContainer = document.getElementById('song-container');
+        const searchInput = document.getElementById('search-input');
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        const audioElement = document.getElementById('audio-element');
+        const playBtn = document.getElementById('play-btn');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const currentSongDisplay = document.getElementById('current-song');
+        const themeToggle = document.getElementById('theme-toggle');
+
+        // Current playing song index
+        let currentSongIndex = 0;
+        let filteredSongs = [];
+        let currentPlayingCard = null;
+
+        // Load Songs into Grid with year grouping
+        function loadSongs(filter = 'all', searchTerm = '') {
+            songContainer.innerHTML = '';
+            
+            // Filter songs based on year and search term
+            filteredSongs = songs.filter(song => {
+                const matchesYear = filter === 'all' || 
+                                  (filter === '2025' && song.year === '2025') ||
+                                  (filter === '2023' && (song.year === '2023' || song.year === '2022')) ||
+                                  (filter === '2020' && (song.year === '2020' || song.year === '2019')) ||
+                                  (filter === '2018' && (song.year === '2018' || song.year === '2017')) ||
+                                  (filter === '2016' && (song.year === '2016' || song.year === '2015'));
+                
+                const matchesSearch = song.title.toLowerCase().includes(searchTerm.toLowerCase());
+                return matchesYear && matchesSearch;
+            });
+
+            // Group by year if showing all songs
+            if (filter === 'all') {
+                const years = [...new Set(songs.map(song => song.year))].sort((a, b) => b - a);
+                
+                years.forEach(year => {
+                    const yearSongs = filteredSongs.filter(song => song.year === year);
+                    if (yearSongs.length > 0) {
+                        // Add year header
+                        const yearHeader = document.createElement('h3');
+                        yearHeader.className = 'year-header';
+                        yearHeader.textContent = year;
+                        songContainer.appendChild(yearHeader);
+                        
+                        // Add songs for this year
+                        yearSongs.forEach(song => {
+                            songContainer.appendChild(createSongCard(song));
+                        });
+                    }
+                });
+            } else {
+                // Just show filtered songs without year headers
+                filteredSongs.forEach(song => {
+                    songContainer.appendChild(createSongCard(song));
+                });
+            }
+        }
+
+        // Helper function to create song cards
+        function createSongCard(song) {
+            const songCard = document.createElement('div');
+            songCard.className = 'song-card';
+            songCard.innerHTML = `
+                <img src="${song.cover}" alt="${song.title}" onerror="this.src='placeholder.jpg'">
+                <div class="song-info">
+                    <h3>${song.title}</h3>
+                    <p class="year-badge">${song.year}</p>
+                    <button class="play-btn" onclick="playSong('${song.audio}', '${song.title}', ${filteredSongs.findIndex(s => s.title === song.title)})">
+                        <i class="fas fa-play"></i>
+                    </button>
+                </div>
+            `;
+            return songCard;
+        }
+
+        // Play Song Function
+        function playSong(audioSrc, title, index) {
+            // Remove playing class from previous card
+            if (currentPlayingCard) {
+                currentPlayingCard.classList.remove('playing');
+            }
+            
+            currentSongIndex = index;
+            audioElement.src = audioSrc;
+            audioElement.play()
+                .then(() => {
+                    currentSongDisplay.textContent = `Now Playing: ${title}`;
+                    playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+                    
+                    // Add playing class to current card
+                    currentPlayingCard = document.querySelectorAll('.song-card')[currentSongIndex];
+                    if (currentPlayingCard) {
+                        currentPlayingCard.classList.add('playing');
+                    }
+                })
+                .catch(error => {
+                    console.error("Playback failed:", error);
+                    currentSongDisplay.textContent = `Error playing: ${title}`;
+                });
+        }
+
+        // Play next song
+        function playNext() {
+            if (filteredSongs.length === 0) return;
+            
+            currentSongIndex = (currentSongIndex + 1) % filteredSongs.length;
+            const nextSong = filteredSongs[currentSongIndex];
+            playSong(nextSong.audio, nextSong.title, currentSongIndex);
+        }
+
+        // Play previous song
+        function playPrev() {
+            if (filteredSongs.length === 0) return;
+            
+            currentSongIndex = (currentSongIndex - 1 + filteredSongs.length) % filteredSongs.length;
+            const prevSong = filteredSongs[currentSongIndex];
+            playSong(prevSong.audio, prevSong.title, currentSongIndex);
+        }
+
+        // Event Listeners
+        searchInput.addEventListener('input', (e) => {
+            loadSongs(document.querySelector('.filter-btn.active').dataset.year, e.target.value);
+        });
+
+        filterButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                loadSongs(button.dataset.year, searchInput.value);
+            });
+        });
+
+        playBtn.addEventListener('click', () => {
+            if (audioElement.paused) {
+                audioElement.play();
+                playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+            } else {
+                audioElement.pause();
+                playBtn.innerHTML = '<i class="fas fa-play"></i>';
+            }
+        });
+
+        prevBtn.addEventListener('click', playPrev);
+        nextBtn.addEventListener('click', playNext);
+
+        audioElement.addEventListener('ended', playNext);
+
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            themeToggle.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
+        });
+
+        // Initialize
+        loadSongs();
+    </script>
+</body>
+</html>
